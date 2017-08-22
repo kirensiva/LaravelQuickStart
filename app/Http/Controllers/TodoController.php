@@ -22,7 +22,7 @@ class TodoController extends Controller {
     public function index() {
 
         $todos = $this->todo->all();
-        dd($todos);
+        return view('todo.index', ['todos' => $todos]);
     }
 
     /**
@@ -49,7 +49,7 @@ class TodoController extends Controller {
             $this->todo->completed = 1;
         }
         $this->todo->save();
-        return redirect()->route('todos.create')->with('success', 'Todo has been created successfully.');;
+        return redirect()->route('todos.create')->with('success', 'Todo has been created successfully.');
     }
 
     /**
@@ -80,7 +80,14 @@ class TodoController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        //
+
+        $todo = $this->todo->find($id);
+        $todo->completed = 0;
+        if (isset($request->completed)) {
+            $todo->completed = 1;
+        }
+        $todo->save();
+        return redirect()->route('todos.index')->with('success', 'Todo has been updated successfully.');
     }
 
     /**
